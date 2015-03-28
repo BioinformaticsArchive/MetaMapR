@@ -1,4 +1,30 @@
 
+#user log in UI
+output$user_login<-renderUI({
+	wellPanel(
+		textInput("user_id","User Name",value=""),
+		# textInput("user_password","Password")
+		passwordInput("user_password","Password",value="")		
+	)
+})	
+
+#authenticate user ID password pair
+# authenticate_user<-reactive({
+observe({
+	#table of user name and passwords
+	if(is.null(input$user_password)) return()
+	if(identical(as.character(input$user_password),"")) values$password<-""
+	lookup<-values$user_pass_table
+	rownames(lookup)<-lookup[,"user"]
+	if(as.character(input$user_id)%in%as.character(lookup[,"user"])) {
+		values$password<-as.character(lookup[as.character(input$user_id),"password"])
+	} else {
+		values$password<-"eruicqwdfqwefweqferefh" 
+	}	
+})
+
+
+
 #custom mods to shiny UI to get
 mainPanel2<-function (..., width1 = 4, width2=10) 
 {
@@ -1017,21 +1043,31 @@ make.edge.list.index<-function(edge.names, edge.list){
 
 #upload data
 output$network_data_upload<-renderUI({
+	authenticate_user()
+	list(
+		conditionalPanel(
+		  condition = "input.user_password == ''",
+		 HTML("<label>Please log in below.</label>")  
+		 ), 
+		conditionalPanel(
+		  condition = gsub("special",values$password,"input.user_password == 'special'"),
+			wellPanel(
+				 checkboxInput(inputId = "upload_data_object", label = tags$span(style="font-size: 20px; color: #75A3FF;",'Upload'),value=FALSE),
+				 conditionalPanel(condition = "input.upload_data_object",
+					 withTags(div(class='row-fluid',
+									 div(class='span3', checkboxInput(inputId = "csv_row_header", label = "row names",value=TRUE)),
+									 div(class='span5', checkboxInput(inputId = "csv_col_header", label = "column names",value=TRUE)))
+									 ),
+					HTML("<label>Load data: (.csv)</label>"),
+					uiOutput("upload_local_server"),
+					HTML("<label>Paste data:</label>"),
+					tags$textarea(id="copyAndPaste", rows=3, cols=10, ""),
+					tags$style(type="text/css", "#copyAndPaste     { width:200px;}")
+				)		
+			)
+		)
+	)
 		
-	wellPanel(
-		 checkboxInput(inputId = "upload_data_object", label = tags$span(style="font-size: 20px; color: #75A3FF;",'Upload'),value=FALSE),
-		 conditionalPanel(condition = "input.upload_data_object",
-			 withTags(div(class='row-fluid',
-							 div(class='span3', checkboxInput(inputId = "csv_row_header", label = "row names",value=TRUE)),
-							 div(class='span5', checkboxInput(inputId = "csv_col_header", label = "column names",value=TRUE)))
-							 ),
-			HTML("<label>Load data: (.csv)</label>"),
-			uiOutput("upload_local_server"),
-			HTML("<label>Paste data:</label>"),
-			tags$textarea(id="copyAndPaste", rows=3, cols=10, ""),
-			tags$style(type="text/css", "#copyAndPaste     { width:200px;}")
-		)		
-	)	
 		
 })
 
@@ -1299,22 +1335,6 @@ output$SVGnetwork<-renderPrint({
 })
 
 
-# #trying to get dynamic html
-# getPage<-function() {
-      # return(includeHTML("SVGnetwork.html"))
-  # }
-  
-# output$inc<-renderUI({
-# #trigger
-# if (input$create_edgelist_network == 0) return(emptyHTML(file="SVGnetwork"))#return(plot(x = 1, type = 'n', main="", axes = FALSE, xlab = "", ylab = ""))
-	# if(!any(input$network_plot_type%in%"static")) return(emptyHTML(file="SVGnetwork"))#return(plot(x = 1, type = 'n', main="", axes = FALSE, xlab = "", ylab = ""))
-
-		# if(any(input$network_plot_type %in% "static")){
-	# getPage()
-	# }
-
-# })
-
 # PLOTTING FUNCTIONS
 #-----------------------------
 # see http://bl.ocks.org/nsonnad/5982652 for colored links
@@ -1360,25 +1380,6 @@ output$networkPlot<-renderPrint({
 	})
 })	
 
-# output$networkPlot_legend<-renderUI({
-	# if (input$create_edgelist_network == 0) return()
-	# if(length(values$edge.list) == 0) return()
-	# if(any(input$network_plot_type %in% "interactive")) {
-		# includeHTML('www/d3label.html')
-	# } else {return()}	
-# })	
-
-
-# output$networkPlot_legend<-renderPrint({ # can not get legend positioned or shown
-	# if (input$create_edgelist_network == 0) return(h5(""))
-	# if(length(values$edge.list) == 0) return(h5(""))
-	# if(any(input$network_plot_type %in% "interactive")) {
-		# # return(cat(readLines('www/d3label.html')))
-		# h5("LEGEND hoes here")
-		
-	# } else {return(h5(""))}	
-# })	
-	
 	
 #network attributes table
 output$node.attributes <- renderTable({

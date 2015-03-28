@@ -30,18 +30,22 @@ shinyUI(fluidPage(
 					hr(),
 						uiOutput("datasets"),
 						br(),
-						uiOutput("network_data_upload"),
-						# tags$details(tags$summary("Upload Options"),
-						# withTags(div(class='row-fluid',
-							 # div(class='span3', checkboxInput(inputId = "csv_row_header", label = "row names",value=TRUE)),
-							 # div(class='span5', checkboxInput(inputId = "csv_col_header", label = "column names",value=TRUE)))
-							 # ),
-						# HTML("<label>Load data: (.csv)</label>"),
-						# uiOutput("upload_local_server"),
-						# HTML("<label>Paste data:</label>"),
-						# tags$textarea(id="copyAndPaste", rows=3, cols=40, "")),
-						uiOutput("network_data_manage"),
-						uiOutput("data_translation_options")
+						# conditionalPanel(
+							# condition = "values.authentication",
+							uiOutput("network_data_upload"),
+							# tags$details(tags$summary("Upload Options"),
+							# withTags(div(class='row-fluid',
+								 # div(class='span3', checkboxInput(inputId = "csv_row_header", label = "row names",value=TRUE)),
+								 # div(class='span5', checkboxInput(inputId = "csv_col_header", label = "column names",value=TRUE)))
+								 # ),
+							# HTML("<label>Load data: (.csv)</label>"),
+							# uiOutput("upload_local_server"),
+							# HTML("<label>Paste data:</label>"),
+							# tags$textarea(id="copyAndPaste", rows=3, cols=40, "")),
+							uiOutput("network_data_manage"),
+							uiOutput("data_translation_options"),
+						# ),
+						uiOutput("user_login")
 				),
 				conditionalPanel(condition = "input.tool == 'network'",		
 					tags$span(style="font-size: 30px; color: #293D66; font-weight: bold;",'Network Options'),
@@ -140,15 +144,17 @@ shinyUI(fluidPage(
 					tabPanel("Node Attributes",downloadButton('downloadNodeAttributes', 'Download'),
 						br(),
 						br(),
-						tableOutput("node.attributes")),
+						tableOutput("node.attributes")
+					),
 					
-					tabPanel("Debug", verbatimTextOutput("debug")))#,
+					tabPanel("Debug", verbatimTextOutput("debug"))
+				)#,
 					# conditionalPanel("updateBusy() || $('html').hasClass('shiny-busy')",
 						# id='progressIndicator',
 						# "Calculating...",
 						# div(id='progress',includeHTML("www/js/timer.js"))
 					# )
-				),
+			),
 				conditionalPanel(condition = "input.tool == 'about'",
 				uiOutput("about"))
 				#,

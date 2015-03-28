@@ -3,7 +3,6 @@
 options(width = 150, shiny.trace=TRUE)
 
 
-
 #load devium functions
 #source local directory to load devium fxns 
 source.local.dir<-function(wd){
@@ -31,23 +30,7 @@ libs <- c("rjson","igraph","graph","reshape2","network","sna","Hmisc","ChemmineR
 check.get.packages(libs)
 #lapply(1:length(libs), function(i) {library(libs[i],character.only = TRUE)})
 
-# #use packrat (FAILS!!!)
-# check.get.packages("packrat")
-# packrat::restore()
 
-
-
-#CTS
-#identifier translations (load package)
-# if(!require("CTSgetR")){
-# install.packages("devtools")
-# library(devtools)
-# install_github(repo = "CTSgetR", username = "dgrapov")
-# library(CTSgetR)
-# }
-
-#CTS options
-# values$CTS.options<-CTS.options()# web query needs packages
 # load("Data/CTS.options")
 values$CTS.options<-CTS.options()
 
@@ -74,18 +57,9 @@ values$clipboard<-""
 values$network_state<-""
 
 
-
-#alternative busy message
-# HTML('<script type="text/javascript">
-        # $(document).ready(function() {
-          # $("#DownloadButton").click(function() { # where DownloadButton = action button and Download = output$
-            # $("#Download").text("Loading...");
-          # });
-        # });
-      # </script>
-# ')
-
-
+#user password authentication
+values$user_pass_table<-as.matrix(data.frame(user="trial",password="trial123"))
+values$password<-"wrong password"
 #create empty html place holder for network svg
 emptyHTML<-function(file){
 		htmlhead <- 
@@ -97,10 +71,10 @@ emptyHTML<-function(file){
 
 			<body>
 			'
-		sink(paste0(file,".html"))
-		cat(htmlhead)
-		#close our file
-		sink(file=NULL)
+		# sink(paste0(file,".html"))
+		cat(htmlhead,file=paste0(file,".html"))
+		# #close our file
+		# sink(file=NULL)
 	}
 
 emptyHTML(file="SVGnetwork")
