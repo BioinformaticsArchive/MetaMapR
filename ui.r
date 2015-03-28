@@ -145,9 +145,9 @@ shinyUI(fluidPage(
 						br(),
 						br(),
 						tableOutput("node.attributes")
-					),
+					)#,
 					
-					tabPanel("Debug", verbatimTextOutput("debug"))
+# 					tabPanel("Debug", verbatimTextOutput("debug"))
 				)#,
 					# conditionalPanel("updateBusy() || $('html').hasClass('shiny-busy')",
 						# id='progressIndicator',

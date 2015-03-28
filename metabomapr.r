@@ -1043,7 +1043,6 @@ make.edge.list.index<-function(edge.names, edge.list){
 
 #upload data
 output$network_data_upload<-renderUI({
-	authenticate_user()
 	list(
 		conditionalPanel(
 		  condition = "input.user_password == ''",
