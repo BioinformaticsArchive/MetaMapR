@@ -1,11 +1,21 @@
 
-#user log in UI
-output$user_login<-renderUI({
-	wellPanel(
-		textInput("user_id","User Name",value=""),
-		# textInput("user_password","Password")
-		passwordInput("user_password","Password",value="")		
-	)
+
+
+output$user_login_UI<-renderUI({
+  conditionalPanel(
+    condition = "!input.user_is_auth",      
+    wellPanel(
+      tags$details(open="open",tags$summary(tags$div(icon("fa fa-key"),
+                               tags$label(style="font-size: 20px;","Sign in"),style="font-size: 20px; color: #EF3732;")),
+                   textInput("user_id","User Name",value=""),
+                   passwordInput("user_password","Password",value=""),
+                   conditionalPanel(
+                     condition = "input.user_password =='478r0ry74554ftvocfbwv'", # hack             
+                     checkboxInput(inputId = "user_is_auth",label='logged in',value=FALSE)
+                   )   
+      )
+    )
+  )
 })	
 
 #authenticate user ID password pair
@@ -16,11 +26,14 @@ observe({
 	if(identical(as.character(input$user_password),"")) values$password<-""
 	lookup<-values$user_pass_table
 	rownames(lookup)<-lookup[,"user"]
-	if(as.character(input$user_id)%in%as.character(lookup[,"user"])) {
+	if(as.character(input$user_id)%in%as.character(lookup[,"user"])) { # checking user and then checking input pass vs. db pass
 		values$password<-as.character(lookup[as.character(input$user_id),"password"])
+    if(identical(as.character(input$user_password),values$password)){
+	  	updateCheckboxInput(session, "user_is_auth",value = TRUE)
+    }
 	} else {
-		values$password<-"eruicqwdfqwefweqferefh" 
-	}	
+		values$password<-"eruicqwdfqwefweqferefh"
+	}	 
 })
 
 
@@ -1043,10 +1056,11 @@ make.edge.list.index<-function(edge.names, edge.list){
 
 #upload data
 output$network_data_upload<-renderUI({
+	#authenticate_user()
 	list(
 		conditionalPanel(
 		  condition = "input.user_password == ''",
-		 HTML("<label>Please log in below.</label>")  
+		  tags$div(icon("fa fa-key"),tags$label(style="font-size: 15px;","Please sign in to upload data"),style="font-size: 15px; color: #EF3732;")
 		 ), 
 		conditionalPanel(
 		  condition = gsub("special",values$password,"input.user_password == 'special'"),
@@ -1149,8 +1163,7 @@ output$network_index_info_chem<-renderUI({
 		selectInput(inputId = "network_index_type_chem", label = "Database:", choices = list("PubChem CID" = "pubchemCID" ), selected = "PubChem CID", multiple = FALSE),
 		selectInput(inputId = "network_index_chem", label = "Metabolite index:", choices = varnames(), selected = varnames()[1], multiple = FALSE),
 		# selectInput(inputId = "network_index_type_chem", label = "Index type:", choices = DB.names(), selected = DB.names()[3], multiple = FALSE),
-		numericInput(inputId = "tanimoto_cutoff" , "Cutoff:", value = 0.7, min = 0, max = 1, step = .005),
-		tags$style(type='text/css', "#tanimoto_cutoff { height: 25px;}")
+		tags$div(class ="numinput",numericInput(inputId = "tanimoto_cutoff" , "Cutoff:", value = 0.7, min = 0, max = 1, step = .005))
 	))
 })
 
@@ -1162,14 +1175,14 @@ output$network_index_info_spec<-renderUI({
 		selectInput(inputId = "network_index_spec", label = "Mass spectra:", choices = varnames(), selected = varnames()[1], multiple = FALSE),
 		selectInput(inputId = "network_index_type_spec", label = "Encode type:", choices = MZ.encode(), selected = MZ.encode()[1], multiple = FALSE),
 		selectInput(inputId = "network_spec_primary_nodes", label = "Primary nodes:", choices = c("none" = 0,varnames()), selected = "none", multiple = FALSE),
-		numericInput(inputId = "network_spec_nodes_max", "Maximum connections:", min = 1, max = 1000, value = 5, step = 1), # need to dynamixcally update max, or make it big for now?
-		numericInput(inputId = "spec_cutoff" , "cutoff:", value = 0.7, min = 0, max = 1, step = .005),
+		tags$div(class ="numinput",numericInput(inputId = "network_spec_nodes_max", "Maximum connections:", min = 1, max = 1000, value = 5, step = 1)), # need to dynamixcally update max, or make it big for now?
+		tags$div(class ="numinput",numericInput(inputId = "spec_cutoff" , "cutoff:", value = 0.7, min = 0, max = 1, step = .005)),
 		selectInput(inputId = "network_spec_retention_index", label = "Retention time filter:", choices = c("none" = 0,varnames()), selected = "none", multiple = FALSE),
-		numericInput(inputId = "network_spec_retention_index_cutoff" , "Delta cutoff:", value = 10000, min = 0, step = 500),
+		tags$div(class ="numinput",numericInput(inputId = "network_spec_retention_index_cutoff" , "Delta cutoff:", value = 10000, min = 0, step = 500))
 		#CSS
-		tags$style(type='text/css', "#network_spec_nodes_max { height: 25px;}"),
-		tags$style(type='text/css', "#spec_cutoff { height: 25px;}"),
-		tags$style(type='text/css', "#network_spec_retention_index_cutoff { height: 25px;}")
+# # 		tags$style(type='text/css', "#network_spec_nodes_max { height: 50px;}"),
+# 		tags$style(type='text/css', "#spec_cutoff { height: 25px;}"),
+# 		tags$style(type='text/css', "#network_spec_retention_index_cutoff { height: 25px;}")
 	))
 })
 
@@ -1181,8 +1194,7 @@ wellPanel(
 		conditionalPanel(condition = "input.cor_edges",
 		selectizeInput(inputId = "network_index_cor", label = "Metabolite index:", choices = varnames(), selected = varnames(), multiple = TRUE),
 		selectInput(inputId = "network_index_type_cor", label = "Method:", choices = list(pearson ="pearson", spearman = "spearman", biweight = "biweight"), selected = "spearman", multiple = FALSE),
-		numericInput(inputId = "cor_cutoff" , "p-value", value = 0.05, min = 0, max = 1, step = .005),
-		tags$style(type='text/css', "#cor_cutoff { height: 25px;}"),
+		tags$div(class ="numinput",numericInput(inputId = "cor_cutoff" , "p-value", value = 0.05, min = 0, max = 1, step = .005)),
 		checkboxInput(inputId = "cor_edges_fdr", label = "FDR correct", value=TRUE)
 	))
 })

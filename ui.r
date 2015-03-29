@@ -28,24 +28,12 @@ shinyUI(fluidPage(
 				conditionalPanel(condition = "input.tool == 'data'|input.tool == 'dataview'",
 					tags$span(style="font-size: 30px; color: #293D66; font-weight: bold;",'Data'),
 					hr(),
-						uiOutput("datasets"),
-						br(),
-						# conditionalPanel(
-							# condition = "values.authentication",
-							uiOutput("network_data_upload"),
-							# tags$details(tags$summary("Upload Options"),
-							# withTags(div(class='row-fluid',
-								 # div(class='span3', checkboxInput(inputId = "csv_row_header", label = "row names",value=TRUE)),
-								 # div(class='span5', checkboxInput(inputId = "csv_col_header", label = "column names",value=TRUE)))
-								 # ),
-							# HTML("<label>Load data: (.csv)</label>"),
-							# uiOutput("upload_local_server"),
-							# HTML("<label>Paste data:</label>"),
-							# tags$textarea(id="copyAndPaste", rows=3, cols=40, "")),
-							uiOutput("network_data_manage"),
-							uiOutput("data_translation_options"),
-						# ),
-						uiOutput("user_login")
+					uiOutput("datasets"),
+					br(),
+					uiOutput("network_data_upload"),
+					uiOutput("network_data_manage"),
+					uiOutput("data_translation_options"),
+					uiOutput("user_login_UI")
 				),
 				conditionalPanel(condition = "input.tool == 'network'",		
 					tags$span(style="font-size: 30px; color: #293D66; font-weight: bold;",'Network Options'),
@@ -70,7 +58,6 @@ shinyUI(fluidPage(
 			#progress indicator
 			tagList(
 				tags$head(
-				  # tags$link(rel="stylesheet", type="text/css",href="www/style.css"),
 				  tags$script(type="text/javascript", src = "js/busy.js"),
 				  tags$script(type="text/javascript", src = "js/timer.js") 
 				)
@@ -80,11 +67,8 @@ shinyUI(fluidPage(
 			  div(id='progress',includeHTML("www/js/timer.js"))
 			),
 			
-			# h3(input.tool),
-			# conditionalPanel(condition = "input.sidepanel == 'Data'",
 			conditionalPanel(condition = "input.tool == 'data'|input.tool == 'dataview'",
 				tabPanel("Data", list(downloadButton('downloadDataObject', 'Download'),tableOutput("view_data")))),
-			# conditionalPanel(condition = "input.sidepanel == 'Network'",	
 			conditionalPanel(condition = "input.tool == 'network'",
 				tabsetPanel( id = "metabomapr",
 					#Network
@@ -96,10 +80,10 @@ shinyUI(fluidPage(
 							column(2,
 							tags$span(style="font-size: 20px; color: #75A3FF","Plot"),
 							  checkboxGroupInput(inputId="network_plot_type", label="Plot type", choices=c("interactive","PNG","SVG"),selected = c("interactive")),
-							  numericInput(inputId = "plot_output_width", "width", min = 0,  value = 400, step = 10),
-							  numericInput(inputId = "plot_output_height", "height", min = 0,  value = 400, step = 10),
-							  tags$style(type="text/css", "#plot_output_height     { width:60px; height:30px;}"),
-							  tags$style(type="text/css", "#plot_output_width     { width:60px; height:30px;}")
+							numericInput(inputId = "plot_output_width", "width", min = 0,  value = 400, step = 100),
+							  numericInput(inputId = "plot_output_height", "height", min = 0,  value = 400, step = 100),
+							  tags$style(type="text/css", "#plot_output_height     { width:80px !important; height:30px;}"),
+							  tags$style(type="text/css", "#plot_output_width     { width:80px !important; height:30px;}")
 							),
 							column(2,
 								tags$span(style="font-size: 20px; color: #75A3FF","Nodes"),
@@ -145,9 +129,9 @@ shinyUI(fluidPage(
 						br(),
 						br(),
 						tableOutput("node.attributes")
-					)#,
+					),
 					
-# 					tabPanel("Debug", verbatimTextOutput("debug"))
+					tabPanel("Debug", verbatimTextOutput("debug"))
 				)#,
 					# conditionalPanel("updateBusy() || $('html').hasClass('shiny-busy')",
 						# id='progressIndicator',

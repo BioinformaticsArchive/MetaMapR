@@ -1,4 +1,14 @@
 
+.numinput {
+  height: 30px;
+  width: 50px !important;
+}
+
+
+.smallnuminput {
+  height: 30px;
+  width: 75px !important;
+}
 
 #tool a:focus {
 	color: #75A3FF;  Sets the text hover color on navbar
@@ -71,10 +81,6 @@ textarea {
   width: 650px; 
 }
 
-.numeric input[type="number"] {
-  max-width: 185px; 
-  height: 30px;
-}
 
 .jslider { 
   max-width: 200px; 
