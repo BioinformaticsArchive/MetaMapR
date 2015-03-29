@@ -28,12 +28,12 @@ shinyUI(fluidPage(
 				conditionalPanel(condition = "input.tool == 'data'|input.tool == 'dataview'",
 					tags$span(style="font-size: 30px; color: #293D66; font-weight: bold;",'Data'),
 					hr(),
+					uiOutput("user_login_UI"),
 					uiOutput("datasets"),
 					br(),
 					uiOutput("network_data_upload"),
 					uiOutput("network_data_manage"),
-					uiOutput("data_translation_options"),
-					uiOutput("user_login_UI")
+					uiOutput("data_translation_options")
 				),
 				conditionalPanel(condition = "input.tool == 'network'",		
 					tags$span(style="font-size: 30px; color: #293D66; font-weight: bold;",'Network Options'),
@@ -129,9 +129,9 @@ shinyUI(fluidPage(
 						br(),
 						br(),
 						tableOutput("node.attributes")
-					),
+					)#,
 					
-					tabPanel("Debug", verbatimTextOutput("debug"))
+# 					tabPanel("Debug", verbatimTextOutput("debug"))
 				)#,
 					# conditionalPanel("updateBusy() || $('html').hasClass('shiny-busy')",
 						# id='progressIndicator',
