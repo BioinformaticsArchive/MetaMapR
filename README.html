@@ -59,12 +59,17 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 
 <div id="metamapr" class="section level1">
 <h1><a href="http://dgrapov.github.io/MetaMapR/">MetaMapR</a></h1>
-<div id="a-metabolomic-network-mapping-tool" class="section level2">
-<h2>A metabolomic network mapping tool</h2>
+<div id="a-metabolomic-network-mapping-tool" class="section level3">
+<h3>A metabolomic network mapping tool</h3>
 <p><img src="Manual/metamapr_long.gif" alt="demo" /></p>
 </div>
-<div id="screenshots" class="section level2">
-<h2><a href="https://github.com/dgrapov/MetaMapR/blob/master/screenshots.md">Screenshots</a></h2>
+<div id="demo" class="section level3">
+<h3>Demo</h3>
+<p>Contact me at createdatasol at gmail.com if you would like to use the software on a trial server.</p>
+</div>
+<div id="screenshots" class="section level3">
+<h3><a href="https://github.com/dgrapov/MetaMapR/blob/master/screenshots.md">Screenshots</a></h3>
+</div>
 <div id="installation" class="section level3">
 <h3>Installation</h3>
 <p>Requires <a href="http://cran.us.r-project.org/">R</a> and <a href="https://github.com/rstudio/shiny-server">Shiny</a>. Try it out using the <a href="http://spark.rstudio.com/dgrapov/MetaMapR/">Shiny glimmer server</a> or run locally by pasting the following code into the R console:</p>
@@ -90,9 +95,7 @@ shiny::runApp(&#39;~/../Desktop/MetaMapR-master/MetaMapR-master&#39;)</code></pr
 </div>
 <div id="citation" class="section level3">
 <h3>Citation</h3>
-<p>If you find MetaMapR useful please cite this tool using the doi listed below.</p>
-<p>Dmitry Grapov (2014) MetaMapR: Metabolomic Network Analysis and Visualization Tool</p>
-<p><a href="http://dx.doi.org/10.5281/zenodo.12880"><img src="https://zenodo.org/badge/7400/dgrapov/MetaMapR.png" alt="DOI" /></a></p>
+<p>You can read the a pre-print of the <a href="https://github.com/dgrapov/MetaMapR/blob/dev/Manual/MetaMapR%20manuscript.pdf">full manuscript</a>. If you find this tool useful please cite the <a href="http://bioinformatics.oxfordjournals.org/content/early/2015/04/03/bioinformatics.btv194.short?rss=1">published manuscript</a> in Oxford Bioinformatics.</p>
 </div>
 <div id="todo" class="section level3">
 <h3>TODO</h3>
@@ -108,7 +111,6 @@ shiny::runApp(&#39;~/../Desktop/MetaMapR-master/MetaMapR-master&#39;)</code></pr
 <li>How are multiple edge types handled in the network output?</li>
 </ol>
 <p>The default setting for returning all edge types or only unique edges can be found under the network tab using the unique edges checkbox. If the option is selected then edges are returned based on a hierarchy Biochemical &gt; Structural &gt; Mass Spectral &gt; Correlation, otherwise all edges are returned.</p>
-</div>
 </div>
 </div>
 
